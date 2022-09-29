@@ -10,9 +10,13 @@ class Game:
     def start_game(self):
         self.player_one.board.create_board()
         self.player_two.board.create_board()
+        #enable functions below for real
+        #self.player_one.board.place_ship_on_board_update()
+        #self.player_two.board.place_ship_on_board_update()
+        self.sample_boards()
         self.player_one.board.display_board()
-        self.player_one.board.place_ship_on_board_update()
-        self.player_one.board.display_board()
+        self.player_one.create_opponent_view_board()
+        self.player_two.create_opponent_view_board()
         self.game_play()
         
 
@@ -27,3 +31,22 @@ class Game:
 
     def run_game(self):
         pass
+
+
+    def sample_boards(self):
+        self.player_one.board.board[2][4] = 'D'
+        self.player_one.board.board[2][5] = 'D'
+        self.player_one.board.board[3][4] = 'S'
+        self.player_one.board.board[3][5] = 'S'
+        self.player_one.board.board[4][4] = 'B'
+        self.player_one.board.board[4][5] = 'B'
+        self.player_one.board.board[5][5] = 'A'
+        self.player_one.board.board[5][6] = 'A'
+        self.player_two.board.board[2][4] = 'D'
+        self.player_two.board.board[2][5] = 'D'
+        self.player_two.board.board[3][4] = 'S'
+        self.player_two.board.board[3][5] = 'S'
+        self.player_two.board.board[4][4] = 'B'
+        self.player_two.board.board[4][5] = 'B'
+        self.player_two.board.board[5][5] = 'A'
+        self.player_two.board.board[5][6] = 'A'

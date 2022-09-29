@@ -6,7 +6,7 @@ from ship import Battleship
 from ship import Aircraft_Carrier
 import math
 
-from symbol import pass_stmt
+
 
 class Board:
 
@@ -96,17 +96,46 @@ class Board:
                     self.board_set_up(list_of_cords, ship_type)
                     counter += 1
 
-    def check_if_attacking_player_hit_defending(self,x_axis,y_axis, player_defending):
-        if player_defending.board[y_axis][x_axis-1] == 'D' or player_defending.board[y_axis][x_axis-1] == 'S' or player_defending.board[y_axis][x_axis-1] == 'B' or player_defending.board[y_axis][x_axis-1] == 'A':
+    def check_if_attacking_player_hit_defending(self,x_axis,y_axis, player_attacking, player_defending):
+        if player_defending.board.board[y_axis][x_axis-1] == 'D' or player_defending.board.board[y_axis][x_axis-1] == 'S' or player_defending.board.board[y_axis][x_axis-1] == 'B' or player_defending.board.board[y_axis][x_axis-1] == 'A':
             is_hit = True
             print('You have hit the enemy ships...')
-            return is_hit
-        if player_defending.board[y_axis][x_axis-1] == '-':
+            return is_hit          
+        if player_defending.board.board[y_axis][x_axis-1] == '-':
             is_hit = False
             print('You have missed the enemy ships!')
             return is_hit
+        
 
-    
+    def direct_attack(self, x_axis, y_axis, player_attacking, player_defending):
+        player_attacking.points += 1
+        ship_type = player_defending.board.board[y_axis][x_axis-1] 
+        if ship_type == 'D':
+            player_defending.board.list_of_ships[0].health_points -= 1
+            if player_defending.board.list_of_ships[0].health_points == 0:
+                print(f"You have sank {player_defending.name}'s {player_defending.board.list_of_ships[0].name}!")
+        if ship_type == 'S':
+            player_defending.board.list_of_ships[1].health_points -= 1
+            if player_defending.board.list_of_ships[1].health_points == 0:
+                print(f"You have sank {player_defending.name}'s {player_defending.board.list_of_ships[1].name}!")
+        if ship_type == 'B':
+            player_defending.board.list_of_ships[2].health_points -= 1
+            if player_defending.board.list_of_ships[2].health_points == 0:
+                print(f"You have sank {player_defending.name}'s {player_defending.board.list_of_ships[2].name}!")
+        if ship_type == 'A':
+            player_defending.board.list_of_ships[3].health_points -= 1
+            if player_defending.board.list_of_ships[3].health_points == 0:
+                print(f"You have sank {player_defending.name}'s {player_defending.board.list_of_ships[3].name}!")
+
+
+    def update_attackers_board(self, y_axis, x_axis, player_attacking, is_it_a_hit):
+        if is_it_a_hit == True:
+            player_attacking.opponent_view_board.board[y_axis][x_axis-1] = 'X'
+        else:
+            player_attacking.opponent_view_board.board[y_axis][x_axis-1] = 'O'
+        player_attacking.opponent_view_board.display_board()
+        
+
 
     def board_set_up(self,coordinates,ship_type):
         """This function places the users pick on the board"""
@@ -215,63 +244,10 @@ class Board:
         else:
             coordinate_one = True
             return coordinate_one
-
-    def validate_choice_is_not_taken(self, x_axis, y_axis):
-        
-        pass
-
-
-        "This function will validate if they picked a number"
-
-    def ship_placement_check(self):
-        "This function validates the choices made in the place_ship_on_board_update"
-
-        pass
-
-    def place_destroyer_on_board(self):
-            print('Please place your destroyer on the board!')
-            #Pick coordinate 1 x axis
-            print("Let's pick the first coordinate.")
-            coordinate_one = False
-            while coordinate_one is False:
-                self.destroyer.coordinate_one_x_axis, self.destroyer.coordinate_one_y_axis = 0, 0
-                self.destroyer.coordinate_one_x_axis, self.destroyer.coordinate_one_y_axis = int(input("Please select your coordinate for the 'X' axis: ")), int(input("Please select your coordinate for the 'Y' axis: "))
-                if self.destroyer.coordinate_one_x_axis > 20 or self.destroyer.coordinate_one_x_axis <0 or self.destroyer.coordinate_one_y_axis > 20 or self.destroyer.coordinate_one_x_axis < 0:
-                    print('Please re-pick a coordinate on the board, between 0 and 20')
-                    coordinate_one = False
-                else:
-                    coordinate_one = True
-            #pick coordinate 2 
-            print("Let's now pick the second coordinate.")
-            coordinate_two = False
-            #Need to also add in logic to make sure the player picks a coordinate that is connected to the first pick using +1
-            #if coordinate 2 is >= coodrinate 1 +2
-            while coordinate_two is False:
-                self.destroyer.coordinate_two_x_axis, self.destroyer.coordinate_two_y_axis = 0, 0
-                self.destroyer.coordinate_two_x_axis, self.destroyer.coordinate_two_y_axis = int(input("Please select your coordinate for the 'X' axis: ")), int(input("Please select your coordinate for the 'Y' axis: "))
-                if self.destroyer.coordinate_two_x_axis >= self.destroyer.coordinate_one_x_axis + 2 or self.destroyer.coordinate_two_x_axis <= self.destroyer.coordinate_one_x_axis - 2 or self.destroyer.coordinate_two_y_axis >= self.destroyer.coordinate_one_y_axis + 2 or self.destroyer.coordinate_two_y_axis <= self.destroyer.coordinate_one_y_axis - 2:
-                    print('Please re-pick a coordinate on the board, between 0 and 20, and also a coordinate connecting to your first pick.')
-                    coordinate_two = False
-                else:
-                    coordinate_two = True
-
-
-
-
-    #start first player setting up board
-    """def board_set_up(self):
-        self.player_one.place_destroyer_on_board()
-        self.board[self.player_one.destroyer.coordinate_one_y_axis][self.player_one.destroyer.coordinate_one_x_axis] = 'd'
-        self.board[self.player_one.destroyer.coordinate_two_y_axis][self.player_one.destroyer.coordinate_two_x_axis] = 'd'
-        self.player_one.place_submarine_on_board()"""
-        
-        
-
+    
     def update_board(self):
         self.board[1][1] = 'd'
         self.board[1][2] = 'd'
-
-    
 
     def display_board(self):
         for letter in self.board:
