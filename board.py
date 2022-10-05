@@ -14,7 +14,7 @@ class Board:
         self.rows = 20
         self.cols = 20
         self.board = []
-        self.list_of_ships = []  #I want to eventually add in this list
+        self.list_of_ships = []  
         self.destroyer = Destroyer()
         self.submarine = Submarine()
         self.battleship_one = Battleship()
@@ -31,9 +31,7 @@ class Board:
         self.list_of_ships.append(Aircraft_Carrier())
 
     
-    def create_board(self):
-        """This function creates the board. NEED TO UPDATE SO THE BOARD STARTS AT 1, AND ENDS AT 20 BOTH WAYS."""
-        
+    def create_board(self):        
         self.create_list_of_ships()
         row = 0
         column_headers = []
@@ -47,10 +45,8 @@ class Board:
                 if len(j) <= 20:
                     j.append(row)
                     row += 1
-    
 
     def place_ship_on_board_update(self):
-        """Function that takes in each X&Y coordinate for each ship. It will not validate"""
         for ship in self.list_of_ships:
             number_of_spaces = ship.space
             if ship.name == 'Destroyer':
@@ -126,6 +122,7 @@ class Board:
             player_defending.board.list_of_ships[3].health_points -= 1
             if player_defending.board.list_of_ships[3].health_points == 0:
                 print(f"You have sank {player_defending.name}'s {player_defending.board.list_of_ships[3].name}!")
+                player_defending.board.list_of_ships[3].isSunk()
 
 
     def update_attackers_board(self, y_axis, x_axis, player_attacking, is_it_a_hit):
@@ -150,12 +147,13 @@ class Board:
             check = True
             return check
 
-    def validate_non_repeated_selection(self, y_axis, x_axis):
-        if self.board[y_axis][x_axis-1] == 'X':
-            check = False
+    def validate_non_repeated_selection(self, x_axis, y_axis, player_attacking):
+        if player_attacking.opponent_view_board.board[y_axis][x_axis-1] == '-':
+            check = True
             return check
         else:
-            check = True
+            check = False
+            print("You have already picked this space.")
             return check
         
     def validate_ship_coordinates_touching(self, y_axis, x_axis, ship, space):
@@ -231,24 +229,18 @@ class Board:
             elif distance_1 <=1 and distance_2 <= 1:
                 check = True
                 return check
-
-
-    
-                    
+                 
 
 
     def validate_choice(self, x_axis, y_axis):
         if x_axis > 20 or x_axis <= 0 or y_axis > 20 or y_axis <1:
             coordinate_one = False
+            print("This is an invalid choice. The space needs to be between 1 & 20")
             return coordinate_one
         else:
             coordinate_one = True
             return coordinate_one
     
-    def update_board(self):
-        self.board[1][1] = 'd'
-        self.board[1][2] = 'd'
-
     def display_board(self):
         for letter in self.board:
             print(letter)

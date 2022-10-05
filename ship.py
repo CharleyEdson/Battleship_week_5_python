@@ -1,11 +1,15 @@
 class Ships:
-    def __init__(self) -> None:
+    def __init__(self):
         self.list_of_ships = ''
-        self.space = None
+        self.space = 0
         self.coordinates = []
         self.list_of_coordinates = []
         self.health_points = ''
+        self.sunk = False
 
+    def isSunk(self):
+        if self.health_points == 0:
+            self.sunk = True
         
 
     
