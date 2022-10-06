@@ -1,3 +1,4 @@
+from ast import Continue
 from tabnanny import check
 from ship import Ships
 from ship import Destroyer
@@ -62,8 +63,52 @@ class Board:
                 valid_coordinate_on_board = False
                 coordinate_not_touching_another_ship = False
                 coordinates_touching = False
-                #while valid_coordinate_on_board is False or coordinate_not_touching_another_ship is False or coordinates_touching is False:
-                #Will remove the if's and while, just check if all of them are ok, and if one isn't repeat.
+                list_of_cords = []
+                #This function can be made into another simpler function - resopnsible for taking in coordinates. Canalso be used for Player class attack other player update 
+                while valid_coordinate_on_board is False or coordinate_not_touching_another_ship is False or coordinates_touching is False:
+                    print(f'Please pick the {counter}: x & y axis coordinate for {ship.name}')
+                    try:
+                        x_axis, y_axis = int(input()), int(input())
+                    except ValueError as error:
+                        print("Error: ", error)
+                        print('Please pick a valid number.')
+                        continue
+                    valid_coordinate_on_board = self.validate_choice(x_axis, y_axis)
+                    if valid_coordinate_on_board is False:
+                        print('Please re-pick a coordinate on the board, between 1 and 20')
+                        continue
+
+                    coordinate_not_touching_another_ship = self.validate_ship_not_touching_another_ship(y_axis,x_axis)
+                    if coordinate_not_touching_another_ship is False:
+                        continue     
+
+                    coordinates_touching = self.validate_ship_coordinates_touching(y_axis, x_axis, ship, space)
+                    if coordinates_touching is False:
+                        print('Please make sure the ships coordinates are touching each other. Pick again')
+                        continue
+
+                list_of_cords.append(x_axis-1)
+                list_of_cords.append(y_axis)
+                ship.list_of_coordinates.append(list_of_cords)
+                self.board_set_up(list_of_cords, ship_type)
+                counter += 1
+
+    def place_ship_on_board_update_old(self):
+        for ship in self.list_of_ships:
+            number_of_spaces = ship.space
+            if ship.name == 'Destroyer':
+                ship_type = 'D'
+            if ship.name == 'Submarine':
+                ship_type = 'S'
+            if ship.name == 'Battleship':
+                ship_type = 'B'
+            if ship.name == 'AirCraft Carrier':
+                ship_type = 'A'
+            counter = 1
+            for space in range(number_of_spaces):
+                valid_coordinate_on_board = False
+                coordinate_not_touching_another_ship = False
+                coordinates_touching = False
                 while valid_coordinate_on_board is False:
                     list_of_cords = []
                     print(f'Please pick the {counter}: x & y axis coordinate for {ship.name}')
@@ -142,6 +187,7 @@ class Board:
         """This function checks to see if the users picks are touching another ship"""
         if self.board[y_axis][x_axis-1] == 'D' or self.board[y_axis][x_axis-1] == 'S' or self.board[y_axis][x_axis-1] == 'B' or self.board[y_axis][x_axis-1] == 'A':
             check = False
+            print("You've already picked this spot. Please try again.")
             return check 
         else:
             check = True
@@ -158,7 +204,7 @@ class Board:
         
     def validate_ship_coordinates_touching(self, y_axis, x_axis, ship, space):
         """This function checks to see if they are placing the ship's coordinates next to each other."""
-        #Can certainly improve logic
+        #Can make this in to a loop to clean up.
         if space == 0:
             check = True
             return check
@@ -233,14 +279,19 @@ class Board:
 
 
     def validate_choice(self, x_axis, y_axis):
-        if x_axis > 20 or x_axis <= 0 or y_axis > 20 or y_axis <1:
+        try:
+            if x_axis > 20 or x_axis <= 0 or y_axis > 20 or y_axis <1:
+                coordinate_one = False
+                print("This is an invalid choice. The space needs to be between 1 & 20")
+                return coordinate_one
+            else:
+                coordinate_one = True
+                return coordinate_one
+        except ValueError as error:
             coordinate_one = False
-            print("This is an invalid choice. The space needs to be between 1 & 20")
             return coordinate_one
-        else:
-            coordinate_one = True
-            return coordinate_one
-    
+            print("Error: ", error)
+        
     def display_board(self):
         for letter in self.board:
             print(letter)

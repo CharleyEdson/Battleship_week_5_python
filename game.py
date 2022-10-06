@@ -13,7 +13,7 @@ class Game:
         #enable functions below for real
         self.player_one.board.place_ship_on_board_update()
         self.player_two.board.place_ship_on_board_update()
-        #Enable below function for sample tests
+        #Enable below function for sample automatic sample board setups
         #self.sample_boards()
         self.player_one.board.display_board()
         self.player_one.create_opponent_view_board()

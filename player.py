@@ -30,30 +30,6 @@ class Player:
                     j.append(row)
                     row += 1
 
-    def attack_other_player(self, player_attacking, player_defending):
-        valid_coordinate_on_board = False
-        not_repeated_selection = False
-        while valid_coordinate_on_board is False:
-            list_of_cords = []
-            #Make a checker for this
-            view_opponent_board = input('Would you like to see the map of the opponents Board before attacking?: Y or N')
-            if view_opponent_board == 'Y':
-                player_attacking.opponent_view_board.display_board()  
-            print(f"{player_attacking.name}, please select the coordinates you'd like to attack your opponents board with!")
-            x_axis, y_axis = int(input()), int(input())
-            valid_coordinate_on_board = self.board.validate_choice(x_axis, y_axis)
-            #Need to edit the players view of the opponents board to first check the bottom
-            # not_repeated_selection = self.board.validate_non_repeated_selection():
-            list_of_cords.append(x_axis-1)
-            list_of_cords.append(y_axis)
-            is_it_a_hit = player_attacking.board.check_if_attacking_player_hit_defending(x_axis, y_axis, player_attacking, player_defending)
-            if is_it_a_hit == True:
-                player_attacking.board.direct_attack(x_axis, y_axis, player_attacking, player_defending)            
-            player_attacking.board.update_attackers_board(y_axis, x_axis, player_attacking,is_it_a_hit)
-            is_attack_over = True
-            return is_attack_over
-
-
     def attack_other_player_update(self, player_attacking, player_defending):
         valid_coordinate_on_board = False
         not_repeated_selection = False
@@ -66,8 +42,12 @@ class Player:
                 player_attacking.opponent_view_board.display_board()  
             while valid_coordinate_on_board is False or not_repeated_selection is False:
                 print(f"{player_attacking.name}, please select the coordinates you'd like to attack your opponents board with!")
-                x_axis, y_axis = int(input()), int(input())
-                #Caused error when I just hit inter: VALUEERROR use try except
+                try:
+                    x_axis, y_axis = int(input()), int(input())
+                except ValueError as error:
+                    print("Error: ", error)
+                    print('Please pick a valid number.')
+                    continue
                 valid_coordinate_on_board = self.board.validate_choice(x_axis, y_axis)
                 if valid_coordinate_on_board is False:
                     continue
